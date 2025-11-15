@@ -1,6 +1,7 @@
 # Nix build results
 result
 .nix-result
+flake.lock
 
 # VSCode and direnv
 .vscode/
