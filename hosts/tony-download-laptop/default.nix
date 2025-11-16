@@ -9,6 +9,7 @@ in
     ({ pkgs, lib, ... }: {
       environment.systemPackages = lib.mkAfter [
         pkgs.git
+	pkgs.qbittorrent
       ];
 
       services.xserver = {
@@ -20,6 +21,11 @@ in
       services.transmission = {
         enable = true;
         openRPCPort = true;
+      };
+
+      boot.loader.grub = {
+  	enable = true;
+  	device = "/dev/sda";
       };
     })
   ];
