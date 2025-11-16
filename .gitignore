@@ -12,3 +12,5 @@ secrets/secret.nix
 
 # macOS
 .DS_Store
+
+*/hardware-configuration.nix
