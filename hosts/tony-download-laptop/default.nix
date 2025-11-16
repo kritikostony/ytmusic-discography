@@ -1,20 +1,14 @@
-{ ... }:
+{ config, pkgs, lib, ... }:
+
 let
   mkHost = import ../lib/mkHost.nix;
 in
-mkHost {
+(mkHost {
   hostName = "tony-download-laptop";
   extraModules = [
     ({ pkgs, lib, ... }: {
       environment.systemPackages = lib.mkAfter [
         pkgs.git
-        pkgs.vlc
-        pkgs.firefox
-        pkgs.brave
-        pkgs.stremio
-        pkgs.qbittorrent
-        pkgs.transmission_gtk
-        pkgs.aria2
       ];
 
       services.xserver = {
@@ -29,4 +23,6 @@ mkHost {
       };
     })
   ];
+}) {
+  inherit config pkgs lib;
 }

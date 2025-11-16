@@ -55,11 +55,23 @@ let
     then hostSecrets.stateVersion
     else "23.11";
 
-  hardwarePath = "${toString repoRoot}/../nixos/${hostName}/hardware-configuration.nix";
-  hardwareModules =
+  hardwarePath = "/etc/nixos/hardware-configuration.nix";
+
+  hardwareModule =
     if builtins.pathExists hardwarePath
-    then [ hardwarePath ]
-    else lib.warn "Hardware configuration for ${hostName} was not found at ${hardwarePath}." [ ];
+    then (
+      let
+        hwText = builtins.readFile hardwarePath;
+        hwFile = builtins.toFile "hardware-configuration.nix" hwText;
+      in
+        import hwFile
+    )
+    else (
+      lib.warn "Hardware config not found at ${hardwarePath}" (_: { })
+    );
+
+  hardwareModules = [ hardwareModule ];
+
 in
 {
   imports = hardwareModules ++ [ ../common/base.nix ] ++ extraModules;
