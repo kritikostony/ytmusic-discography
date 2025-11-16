@@ -7,7 +7,7 @@
     auto-optimise-store = true;
   };
 
-  time.timeZone = lib.mkDefault "UTC";
+  time.timeZone = lib.mkDefault "Europe/Athens";
   i18n.defaultLocale = lib.mkDefault "en_US.UTF-8";
 
   console = {
@@ -29,11 +29,12 @@
 
   environment.systemPackages = lib.mkDefault (with pkgs; [
     git
+    nano
     vim
     htop
   ]);
 
   nixpkgs.config.allowUnfree = true;
 
-  system.stateVersion = "23.11";
+  system.stateVersion = "25.05";
 }

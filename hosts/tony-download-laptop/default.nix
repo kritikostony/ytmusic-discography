@@ -8,11 +8,13 @@ in
   extraModules = [
     ({ pkgs, lib, ... }: {
       environment.systemPackages = lib.mkAfter [
+	pkgs.tony-nixos #my custom rebuild
         pkgs.git
 	pkgs.qbittorrent-cli
 	pkgs.protonvpn-gui
 	pkgs.brave
 	pkgs.vscode
+	pkgs.gnomeExtensions.dash-to-panel
 	pkgs.stremio
       ];
 
