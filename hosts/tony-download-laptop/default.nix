@@ -9,9 +9,10 @@ in
     ({ pkgs, lib, ... }: {
       environment.systemPackages = lib.mkAfter [
         pkgs.git
-	pkgs.qbittorrent-gui
+	pkgs.qbittorrent-cli
 	pkgs.protonvpn-gui
 	pkgs.brave
+	pkgs.vscode
 	pkgs.stremio
       ];
 
