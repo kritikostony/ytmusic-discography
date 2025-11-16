@@ -6,8 +6,9 @@
 let
   repoRoot = ../../.;
   secretsPath = "${toString repoRoot}/secrets/secret.nix";
-  defaultSecretsPath = "${toString repoRoot}/secrets/secret_default.nix";
-  secretsSource = if builtins.pathExists secretsPath then secretsPath else defaultSecretsPath;
+  # defaultSecretsPath = "${toString repoRoot}/secrets/secret_default.nix";
+  #secretsSource = if builtins.pathExists secretsPath then secretsPath else defaultSecretsPath;
+  secretsSource = secretsPath;
   secrets = import secretsSource;
 
   hostSecrets =

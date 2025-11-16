@@ -7,9 +7,6 @@ flake.lock
 .vscode/
 .direnv/
 
-# Secrets
-secrets/secret.nix
-
 # macOS
 .DS_Store
 
