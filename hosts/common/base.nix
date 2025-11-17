@@ -26,7 +26,6 @@
   };
 
   networking.firewall.enable = true;
-  networking.networkmanager.enable = true;
 
   environment.systemPackages = lib.mkDefault (with pkgs; [
     git

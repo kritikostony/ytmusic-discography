@@ -47,6 +47,7 @@ in
       };
 
       security.chromiumSuidSandbox.enable = true;
+      networking.networkmanager.enable = true;
 
       boot.loader.grub = {
   	enable = true;
