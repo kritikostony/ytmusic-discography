@@ -63,8 +63,9 @@ All usernames, password hashes, and SSH keys are loaded from a machine-local sec
 
 1. The path specified by the `TONY_SECRETS_PATH` environment variable (set it before running `nixos-rebuild`).
 2. `/etc/nixos-config/secrets/secret.nix` (useful when the repo lives at `/etc/nixos-config`).
-3. `secrets/secret.nix` inside this repository (the path is ignored by Git).
-4. `secrets/secret_default.nix` as a last-resort template.
+3. `../nixos/secrets/secret.nix` (keeps secrets outside the repo alongside the hardware configs).
+4. `secrets/secret.nix` inside this repository (the path is ignored by Git).
+5. `secrets/secret_default.nix` as a last-resort template.
 
 To bootstrap a new machine, copy the template and edit it in place:
 
