@@ -8,7 +8,7 @@ let
   repoDir = toString repoRoot;
   repoParentDir = builtins.dirOf repoDir;
 
-  defaultSecretsPath = "${repoDir}/secrets/secret_default.nix";
+  defaultSecretsPath = "${repoDir}/secrets/secret.nix";
 
   resolveSecretsPath = raw:
     let

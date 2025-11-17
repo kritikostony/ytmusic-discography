@@ -32,6 +32,8 @@ in
         openRPCPort = true;
       };
 
+      security.chromiumSuidSandbox.enable = true;
+
       boot.loader.grub = {
   	enable = true;
   	device = "/dev/sda";
