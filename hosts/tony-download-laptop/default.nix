@@ -48,6 +48,8 @@ in
 
       security.chromiumSuidSandbox.enable = true;
       networking.networkmanager.enable = true;
+      networking.wireless.enable = false;
+      hardware.enableRedistributableFirmware = true;
 
       boot.loader.grub = {
   	enable = true;
