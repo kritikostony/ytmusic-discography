@@ -5,7 +5,7 @@
 { config, pkgs, lib, ... }:
 let
   repoRoot = ../../.;
-  defaultSecretsPath = "${toString repoRoot}/secrets/secret_default.nix";
+  defaultSecretsPath = "${toString repoRoot}/secrets/secret.nix";
 
   secretsPathCandidates =
     let
