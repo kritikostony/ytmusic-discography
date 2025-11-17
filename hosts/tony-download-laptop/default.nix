@@ -16,12 +16,12 @@ in
 	pkgs.protonvpn-cli
 	pkgs.firefox
 	pkgs.brave
-	pkgs.vscodium
+	pkgs.vscode
  	pkgs.stremio
         pkgs.kdePackages.dolphin       # File manager
         pkgs.kdePackages.konsole       # Terminal
         pkgs.kdePackages.kate          # Editor
-#        pkgs.kdePackages.kdeconnect    # Mobile integration
+        pkgs.jetbrains.pycharm-community-bin
       ];
 
       # Disable KDE bloatware
