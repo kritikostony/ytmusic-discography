@@ -59,7 +59,19 @@ If a hardware file is missing the build will emit a warning so you know which pa
 
 ## Managing secrets
 
-All usernames, password hashes, and SSH keys are loaded from `secrets/secret.nix`. This file is ignored by Git (see `.gitignore`). A template is provided in `secrets/secret_default.nix` – copy it to `secrets/secret.nix` and replace every placeholder with your real values:
+All usernames, password hashes, and SSH keys are loaded from a machine-local secrets file that is **not** checked into Git. The loader in `hosts/lib/mkHost.nix` searches for the first file that exists in this order:
+
+1. The path specified by the `TONY_SECRETS_PATH` environment variable. Because flakes evaluate purely, set the variable and run
+   with `--impure` for Nix to see it (for example `TONY_SECRETS_PATH=/safe/path/secret.nix nixos-rebuild switch --flake .#tony-server --impure`).
+2. `/etc/nixos-config/secrets/secret.nix` (useful when the repo lives at `/etc/nixos-config`).
+3. `../nixos/secrets/secret.nix` (keeps secrets outside the repo alongside the hardware configs).
+4. `secrets/secret.nix` inside this repository (the path is ignored by Git).
+5. `secrets/secret_default.nix` as a last-resort template.
+
+Relative values in `TONY_SECRETS_PATH` are resolved against the current working directory of the `nixos-rebuild`/`nix build`
+invocation, so absolute paths are recommended.
+
+To bootstrap a new machine, copy the template and edit it in place:
 
 ```bash
 cp secrets/secret_default.nix secrets/secret.nix

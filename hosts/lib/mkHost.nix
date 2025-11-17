@@ -5,10 +5,38 @@
 { config, pkgs, lib, ... }:
 let
   repoRoot = ../../.;
-  secretsPath = "${toString repoRoot}/secrets/secret.nix";
-  # defaultSecretsPath = "${toString repoRoot}/secrets/secret_default.nix";
-  #secretsSource = if builtins.pathExists secretsPath then secretsPath else defaultSecretsPath;
-  secretsSource = secretsPath;
+  defaultSecretsPath = "${toString repoRoot}/secrets/secret_default.nix";
+
+  outsideRepoSecretsPath = "${toString repoRoot}/../nixos/secrets/secret.nix";
+
+  envSecretPath =
+    let
+      raw = builtins.getEnv "TONY_SECRETS_PATH";
+      pwd = builtins.getEnv "PWD";
+    in
+      if raw == "" then null
+      else if lib.hasPrefix "/" raw then raw
+      else if pwd != "" then "${pwd}/${raw}"
+      else raw;
+
+  secretsPathCandidates =
+    (lib.optional (envSecretPath != null) envSecretPath)
+    ++ [ "/etc/nixos-config/secrets/secret.nix"
+         outsideRepoSecretsPath
+         "${toString repoRoot}/secrets/secret.nix"
+       ];
+
+  secretsSource =
+    let
+      found = lib.filter builtins.pathExists secretsPathCandidates;
+    in
+      if found != [ ] then builtins.head found
+      else if builtins.pathExists defaultSecretsPath then defaultSecretsPath
+      else throw ''No secrets file found. Provide one of:
+- export TONY_SECRETS_PATH=<path> pointing to your secrets file (requires --impure when using flakes)
+- ${toString repoRoot}/secrets/secret.nix (gitignored local copy)
+- /etc/nixos-config/secrets/secret.nix
+Or create ${defaultSecretsPath} from the template.'';
   secrets = import secretsSource;
 
   hostSecrets =
