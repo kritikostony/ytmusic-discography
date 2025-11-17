@@ -16,7 +16,7 @@ in
 	pkgs.protonvpn-cli
 	pkgs.firefox
 	pkgs.brave
-	pkgs.vscode
+	pkgs.vscodium
 	pkgs.gnomeExtensions.dash-to-dock
 	pkgs.stremio
       ];
