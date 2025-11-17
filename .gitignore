@@ -11,3 +11,4 @@ flake.lock
 .DS_Store
 
 */hardware-configuration.nix
+secrets/secret.nix
