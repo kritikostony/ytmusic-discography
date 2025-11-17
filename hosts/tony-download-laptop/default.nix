@@ -8,7 +8,7 @@ in
   extraModules = [
     ({ pkgs, lib, ... }: {
       environment.systemPackages = lib.mkAfter [
-	pkgs.tony-nixos #my custom rebuild
+	pkgs.tony-nixos #my custom rebuild command
         pkgs.git
 	pkgs.qbittorrent
 	pkgs.qbittorrent-cli
@@ -17,14 +17,28 @@ in
 	pkgs.firefox
 	pkgs.brave
 	pkgs.vscodium
-	pkgs.gnomeExtensions.dash-to-dock
-	pkgs.stremio
+ 	pkgs.stremio
+        pkgs.kdePackages.dolphin       # File manager
+        pkgs.kdePackages.konsole       # Terminal
+        pkgs.kdePackages.kate          # Editor
+#        pkgs.kdePackages.kdeconnect    # Mobile integration
+      ];
+
+      # Disable KDE bloatware
+      environment.plasma6.excludePackages = with pkgs.kdePackages; [
+        discover          # AppStore (Flatpak/Snap) – unnecessary on NixOS
+        elisa             # Music player
+        dragon            # Video player
+        kmines            # Games
+        kmahjongg         # Games
+        okular            # PDF reader (optional)
+        kwalletmanager    # If you don't want the wallet UI
       ];
 
       services.xserver = {
         enable = true;
-        displayManager.gdm.enable = true;
-        desktopManager.gnome.enable = true;
+        displayManager.sddm.enable = true;
+        desktopManager.plasma6.enable = true;
       };
 
       services.transmission = {
