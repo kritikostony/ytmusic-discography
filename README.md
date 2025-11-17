@@ -65,11 +65,12 @@ All usernames, password hashes, and SSH keys are loaded from a machine-local sec
    with `--impure` for Nix to see it (for example `TONY_SECRETS_PATH=/safe/path/secret.nix nixos-rebuild switch --flake .#tony-server --impure`).
 2. `/etc/nixos-config/secrets/secret.nix` (useful when the repo lives at `/etc/nixos-config`).
 3. `../nixos/secrets/secret.nix` (keeps secrets outside the repo alongside the hardware configs).
-4. `secrets/secret.nix` inside this repository (the path is ignored by Git).
-5. `secrets/secret_default.nix` as a last-resort template.
+4. `../secrets/secret.nix` (keeps secrets outside the repo without the `nixos` layer).
+5. `secrets/secret.nix` inside this repository (the path is ignored by Git).
+6. `secrets/secret_default.nix` as a last-resort template.
 
 Relative values in `TONY_SECRETS_PATH` are resolved against the current working directory of the `nixos-rebuild`/`nix build`
-invocation, so absolute paths are recommended.
+invocation when available, falling back to the repository root.
 
 To bootstrap a new machine, copy the template and edit it in place:
 
