@@ -10,11 +10,14 @@ in
       environment.systemPackages = lib.mkAfter [
 	pkgs.tony-nixos #my custom rebuild
         pkgs.git
+	pkgs.qbittorrent
 	pkgs.qbittorrent-cli
 	pkgs.protonvpn-gui
+	pkgs.protonvpn-cli
+	pkgs.firefox
 	pkgs.brave
 	pkgs.vscode
-	pkgs.gnomeExtensions.dash-to-panel
+	pkgs.gnomeExtensions.dash-to-dock
 	pkgs.stremio
       ];
 

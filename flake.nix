@@ -16,6 +16,8 @@
 	      ({ pkgs, ... }: {
 	        nixpkgs.overlays = [ self.overlays.default ];
 	      })
+              # Load secret file even if it's in .gitignore
+              /etc/nixos/secret.nix
 	    ];
 	  };
     in {
