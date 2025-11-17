@@ -5,30 +5,50 @@
 { config, pkgs, lib, ... }:
 let
   repoRoot = ../../.;
-  defaultSecretsPath = "${toString repoRoot}/secrets/secret_default.nix";
+  repoDir = toString repoRoot;
+  repoParentDir = builtins.dirOf repoDir;
 
-  outsideRepoSecretsPath = "${toString repoRoot}/../nixos/secrets/secret.nix";
+  defaultSecretsPath = "${repoDir}/secrets/secret_default.nix";
+
+  resolveSecretsPath = raw:
+    let
+      pwd = builtins.getEnv "PWD";
+      base = if pwd != "" then pwd else repoDir;
+    in
+      if raw == "" then null
+      else if lib.hasPrefix "/" raw then raw
+      else "${base}/${raw}";
+
+  envSecretPath = resolveSecretsPath (builtins.getEnv "TONY_SECRETS_PATH");
 
   secretsPathCandidates =
-    let
-      envSecretPath = builtins.getEnv "TONY_SECRETS_PATH";
-    in
-      (lib.optional (envSecretPath != "") envSecretPath)
-      ++ [ "/etc/nixos-config/secrets/secret.nix"
-           outsideRepoSecretsPath
-           "${toString repoRoot}/secrets/secret.nix"
-         ];
+    lib.filter (candidate: candidate != null) (
+      [ envSecretPath
+        "/etc/nixos-config/secrets/secret.nix"
+        "${repoParentDir}/nixos/secrets/secret.nix"
+        "${repoParentDir}/secrets/secret.nix"
+        "${repoDir}/secrets/secret.nix"
+      ]
+    );
 
   secretsSource =
     let
       found = lib.filter builtins.pathExists secretsPathCandidates;
+      describeCandidates =
+        lib.concatMapStringsSep "\n" (candidate:
+          "- ${candidate} (${if builtins.pathExists candidate then "found" else "missing"})"
+        ) secretsPathCandidates;
     in
       if found != [ ] then builtins.head found
       else if builtins.pathExists defaultSecretsPath then defaultSecretsPath
-      else throw ''No secrets file found. Provide one of:
-- export TONY_SECRETS_PATH=<path> pointing to your secrets file
-- ${toString repoRoot}/secrets/secret.nix (gitignored local copy)
+      else throw ''No secrets file found. Checked:
+${describeCandidates}
+Provide one of:
+- export TONY_SECRETS_PATH=<path> pointing to your secrets file (requires --impure when using flakes)
+- ${repoDir}/secrets/secret.nix (gitignored local copy)
 - /etc/nixos-config/secrets/secret.nix
+- ${repoParentDir}/secrets/secret.nix
+- ${repoParentDir}/nixos/secrets/secret.nix
 Or create ${defaultSecretsPath} from the template.'';
   secrets = import secretsSource;
 

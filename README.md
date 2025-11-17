@@ -61,11 +61,16 @@ If a hardware file is missing the build will emit a warning so you know which pa
 
 All usernames, password hashes, and SSH keys are loaded from a machine-local secrets file that is **not** checked into Git. The loader in `hosts/lib/mkHost.nix` searches for the first file that exists in this order:
 
-1. The path specified by the `TONY_SECRETS_PATH` environment variable (set it before running `nixos-rebuild`).
+1. The path specified by the `TONY_SECRETS_PATH` environment variable. Because flakes evaluate purely, set the variable and run
+   with `--impure` for Nix to see it (for example `TONY_SECRETS_PATH=/safe/path/secret.nix nixos-rebuild switch --flake .#tony-server --impure`).
 2. `/etc/nixos-config/secrets/secret.nix` (useful when the repo lives at `/etc/nixos-config`).
 3. `../nixos/secrets/secret.nix` (keeps secrets outside the repo alongside the hardware configs).
-4. `secrets/secret.nix` inside this repository (the path is ignored by Git).
-5. `secrets/secret_default.nix` as a last-resort template.
+4. `../secrets/secret.nix` (keeps secrets outside the repo without the `nixos` layer).
+5. `secrets/secret.nix` inside this repository (the path is ignored by Git).
+6. `secrets/secret_default.nix` as a last-resort template.
+
+Relative values in `TONY_SECRETS_PATH` are resolved against the current working directory of the `nixos-rebuild`/`nix build`
+invocation when available, falling back to the repository root.
 
 To bootstrap a new machine, copy the template and edit it in place:
 
