@@ -5,14 +5,15 @@
 { config, pkgs, lib, ... }:
 let
   repoRoot = ../../.;
-  defaultSecretsPath = "${toString repoRoot}/secrets/secret.nix";
+  parentOfRepoRoot = ../../../.;
+  defaultSecretsPath = "${toString repoRoot}/secrets/secret_default.nix";
 
   secretsPathCandidates =
     let
       envSecretPath = builtins.getEnv "TONY_SECRETS_PATH";
     in
       (lib.optional (envSecretPath != "") envSecretPath)
-      ++ [ "${toString repoRoot}/secrets/secret.nix"
+      ++ [ "${toString parentOfRepoRoot}/nixos/secret.nix"
            "/etc/nixos-config/secrets/secret.nix"
          ];
 
