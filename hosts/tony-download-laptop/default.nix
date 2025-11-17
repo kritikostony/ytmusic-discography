@@ -21,6 +21,7 @@ in
         pkgs.kdePackages.dolphin       # File manager
         pkgs.kdePackages.konsole       # Terminal
         pkgs.kdePackages.kate          # Editor
+	pkgs.kdePackages.latte-dock
 #        pkgs.kdePackages.kdeconnect    # Mobile integration
       ];
 
