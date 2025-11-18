@@ -12,6 +12,14 @@ mkHost {
         pkgs.thunderbird
       ];
 
+      services.xserver = {
+        enable = true;
+        displayManager.sddm.enable = true;
+        desktopManager.plasma6.enable = true;
+      };
+
+      networking.networkmanager.enable = true;
+      hardware.enableRedistributableFirmware = true;
       hardware.bluetooth.enable = true;
       services.printing.enable = true;
     })
