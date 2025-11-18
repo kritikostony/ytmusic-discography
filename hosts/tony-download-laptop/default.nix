@@ -16,7 +16,7 @@ in
         protonvpn-cli
         firefox
         brave
-        vscode
+        vscodium
         stremio
         kdePackages.dolphin           # File manager
         kdePackages.konsole           # Terminal
@@ -70,7 +70,7 @@ in
         enable = true;
         xdgOpenUsePortal = true;
         extraPortals = with pkgs; [
-          xdg-desktop-portal-kde
+          # xdg-desktop-portal-kde
           xdg-desktop-portal-gtk
         ];
       };
