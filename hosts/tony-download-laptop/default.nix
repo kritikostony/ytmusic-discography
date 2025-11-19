@@ -22,6 +22,7 @@ in
         kdePackages.konsole           # Terminal
         kdePackages.kate              # Editor
         jetbrains.pycharm-community-bin
+        nfs-utils
       ]);
 
       # Disable KDE bloatware
