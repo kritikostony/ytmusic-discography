@@ -1,15 +1,17 @@
 #!/bin/bash
-set -e
-
-SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
+set -euo pipefail
 
 PLAYLIST_URL="https://www.youtube.com/playlist?list=PLOTbwrNJHj_JA2fTN9t_-20DH9q_ydf07"
+DOWNLOAD_DIR="${DOWNLOAD_DIR:-/downloads}"
+STATE_DIR="${STATE_DIR:-$DOWNLOAD_DIR/.yt-dlp}"
 
-COUNTER_FILE="$SCRIPT_DIR/counter.txt"
-ARCHIVE_FILE="$SCRIPT_DIR/downloaded.txt"
+mkdir -p "$DOWNLOAD_DIR" "$STATE_DIR"
+
+COUNTER_FILE="$STATE_DIR/counter.txt"
+ARCHIVE_FILE="$STATE_DIR/downloaded.txt"
 
 # clean leftovers
-find "$SCRIPT_DIR" -name '*.part' -delete
+find "$DOWNLOAD_DIR" -name '*.part' -delete
 
 # init counter
 [ -f "$COUNTER_FILE" ] || echo 1 > "$COUNTER_FILE"
@@ -27,6 +29,6 @@ yt-dlp \
   --no-write-info-json \
   --no-write-playlist-metafiles \
   --download-archive "$ARCHIVE_FILE" \
-  --output "$SCRIPT_DIR/%(autonumber)03d - %(title)s.%(ext)s" \
+  --output "$DOWNLOAD_DIR/%(autonumber)03d - %(title)s.%(ext)s" \
   --exec 'bash -c "echo $(( $(cat \"'"$COUNTER_FILE"'\" ) + 1 )) > \"'"$COUNTER_FILE"'\""' \
   "$PLAYLIST_URL"
