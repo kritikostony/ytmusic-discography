@@ -7,7 +7,7 @@ STATE_DIR="${STATE_DIR:-$DOWNLOAD_DIR/.yt-dlp}"
 
 mkdir -p "$DOWNLOAD_DIR" "$STATE_DIR"
 
-COUNTER_FILE="$STATE_DIR/counter.txt"
+COUNTER_FILE="$DOWNLOAD_DIR/counter.txt"
 ARCHIVE_FILE="$STATE_DIR/downloaded.txt"
 
 # clean leftovers
