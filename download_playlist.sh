@@ -5,11 +5,7 @@ PLAYLIST_URL="https://www.youtube.com/playlist?list=PLOTbwrNJHj_JA2fTN9t_-20DH9q
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 if [ -z "${DOWNLOAD_DIR:-}" ]; then
-  if [ -d "/downloads" ] && [ -w "/downloads" ]; then
-    DOWNLOAD_DIR="/downloads"
-  else
-    DOWNLOAD_DIR="$SCRIPT_DIR"
-  fi
+  DOWNLOAD_DIR="$SCRIPT_DIR"
 fi
 
 mkdir -p "$DOWNLOAD_DIR"
