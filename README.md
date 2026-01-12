@@ -14,8 +14,9 @@ already been downloaded so future runs only fetch new videos.
 - `docker-compose.yaml` mounts the current directory to `/downloads` in the
   container, so downloads land next to the compose file.
   - If you run `download_playlist.sh` directly on the host, it defaults to
-    downloading into the directory containing the script unless `DOWNLOAD_DIR`
-    is set.
+    downloading into the directory containing the script unless
+    `DOWNLOAD_DIR` is set. When running in the container, it prefers
+    `/downloads` if that path exists and is writable.
 
 ## Usage
 
