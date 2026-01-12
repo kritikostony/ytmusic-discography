@@ -2,18 +2,20 @@
 
 This project runs `yt-dlp` in a container to download videos from a YouTube
 playlist (the "Reddit Stories" playlist) into the directory where you run the
-Compose file. It keeps a small state directory (`.yt-dlp`) to remember what has
+Compose file. It keeps small state files in the download directory to remember what has
 already been downloaded so future runs only fetch new videos.
 
 ## How it works
 
 - `download_playlist.sh` calls `yt-dlp` with:
-  - a download archive (`.yt-dlp/downloaded.txt`) to skip previously downloaded
-    videos,
-  - a counter (`.yt-dlp/counter.txt`) to keep numbering consistent between runs,
+  - a download archive (`downloaded.txt`) to skip previously downloaded videos,
+  - a counter (`counter.txt`) to keep numbering consistent between runs,
   - thumbnails + metadata embedded into the video files.
 - `docker-compose.yaml` mounts the current directory to `/downloads` in the
   container, so downloads land next to the compose file.
+  - If you run `download_playlist.sh` directly on the host, it defaults to
+    downloading into the directory containing the script unless `DOWNLOAD_DIR`
+    is set.
 
 ## Usage
 
@@ -34,5 +36,5 @@ cd /path/to/srrs-download && docker compose up --build --remove-orphans
 ## Files created
 
 - `### - <title>.mkv` video files (with embedded metadata and thumbnails)
-- `.yt-dlp/downloaded.txt` (download archive)
-- `.yt-dlp/counter.txt` (autonumbering state)
+- `downloaded.txt` (download archive)
+- `counter.txt` (autonumbering state)
