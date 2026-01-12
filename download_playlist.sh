@@ -2,13 +2,13 @@
 set -euo pipefail
 
 PLAYLIST_URL="https://www.youtube.com/playlist?list=PLOTbwrNJHj_JA2fTN9t_-20DH9q_ydf07"
-DOWNLOAD_DIR="${DOWNLOAD_DIR:-/downloads}"
-STATE_DIR="${STATE_DIR:-$DOWNLOAD_DIR/.yt-dlp}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOWNLOAD_DIR="${DOWNLOAD_DIR:-$SCRIPT_DIR}"
 
-mkdir -p "$DOWNLOAD_DIR" "$STATE_DIR"
+mkdir -p "$DOWNLOAD_DIR"
 
 COUNTER_FILE="$DOWNLOAD_DIR/counter.txt"
-ARCHIVE_FILE="$STATE_DIR/downloaded.txt"
+ARCHIVE_FILE="$DOWNLOAD_DIR/downloaded.txt"
 
 # clean leftovers
 find "$DOWNLOAD_DIR" -name '*.part' -delete
