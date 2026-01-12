@@ -1,13 +1,7 @@
-# Nix build results
-result
-.nix-result
-flake.lock
+# ignore everything
+*
 
-# VSCode and direnv
-.vscode/
-.direnv/
-
-# macOS
-.DS_Store
-
-*/hardware-configuration.nix
+# but NOT these:
+!/Dockerfile
+!/download_playlist.sh
+!/docker-compose.yaml

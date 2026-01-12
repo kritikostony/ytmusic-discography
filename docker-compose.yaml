@@ -1,0 +1,9 @@
+services:
+  yt-dlp:
+    build: .
+    image: local-yt-dlp
+    container_name: yt-dlp-reddit
+    volumes:
+      - .:/downloads
+    working_dir: /downloads
+    command: ["bash", "-lc", "/downloads/download_playlist.sh"]
