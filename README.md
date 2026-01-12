@@ -2,8 +2,9 @@
 
 This project runs `yt-dlp` in a container to download videos from a YouTube
 playlist (the "Reddit Stories" playlist) into the directory where you run the
-Compose file. It keeps small state files in the download directory to remember what has
-already been downloaded so future runs only fetch new videos.
+Compose file. It keeps small state files in the download directory (or `STATE_DIR`
+when set) to remember what has already been downloaded so future runs only fetch new
+videos.
 
 ## How it works
 
@@ -17,6 +18,8 @@ already been downloaded so future runs only fetch new videos.
     downloading into the directory containing the script unless
     `DOWNLOAD_DIR` is set. When running in the container, it prefers
     `/downloads` if that path exists and is writable.
+  - If `STATE_DIR` is set, the counter and download archive live there instead
+    of the download directory (handy for keeping state files separate).
 
 ## Usage
 
