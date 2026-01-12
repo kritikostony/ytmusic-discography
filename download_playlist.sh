@@ -30,8 +30,9 @@ START_NUM=$(cat "$COUNTER_FILE")
 yt-dlp \
   --playlist-reverse \
   --autonumber-start "$START_NUM" \
-  -f "bv*[ext=mp4]+ba[ext=m4a]/b" \
+  -f "bv*+ba/b" \
   --merge-output-format mkv \
+  --remux-video mkv \
   --embed-metadata \
   --embed-thumbnail \
   --write-thumbnail \
@@ -40,5 +41,5 @@ yt-dlp \
   --no-write-playlist-metafiles \
   --download-archive "$ARCHIVE_FILE" \
   --output "$DOWNLOAD_DIR/%(autonumber)03d - %(title)s.%(ext)s" \
-  --exec 'bash -c "echo $(( $(cat \"'"$COUNTER_FILE"'\" ) + 1 )) > \"'"$COUNTER_FILE"'\""' \
+  --exec 'after_move:bash -c "echo $(( $(cat \"'"$COUNTER_FILE"'\" ) + 1 )) > \"'"$COUNTER_FILE"'\""' \
   "$PLAYLIST_URL"
