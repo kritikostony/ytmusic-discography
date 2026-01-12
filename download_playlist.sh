@@ -5,13 +5,20 @@ PLAYLIST_URL="https://www.youtube.com/playlist?list=PLOTbwrNJHj_JA2fTN9t_-20DH9q
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 if [ -z "${DOWNLOAD_DIR:-}" ]; then
-  DOWNLOAD_DIR="$SCRIPT_DIR"
+  if [ -d /downloads ] && [ -w /downloads ]; then
+    DOWNLOAD_DIR="/downloads"
+  else
+    DOWNLOAD_DIR="$SCRIPT_DIR"
+  fi
 fi
 
 mkdir -p "$DOWNLOAD_DIR"
 
-COUNTER_FILE="$DOWNLOAD_DIR/counter.txt"
-ARCHIVE_FILE="$DOWNLOAD_DIR/downloaded.txt"
+STATE_DIR="${STATE_DIR:-$DOWNLOAD_DIR}"
+mkdir -p "$STATE_DIR"
+
+COUNTER_FILE="$STATE_DIR/counter.txt"
+ARCHIVE_FILE="$STATE_DIR/downloaded.txt"
 
 # clean leftovers
 find "$DOWNLOAD_DIR" -name '*.part' -delete
