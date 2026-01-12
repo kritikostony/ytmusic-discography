@@ -23,8 +23,13 @@ From the folder where you want videos stored:
 docker compose up --build --remove-orphans
 ```
 
-For a scheduled job (like TrueNAS cron), make sure you `cd` into the target
-download folder before running the command.
+For a scheduled job (like a TrueNAS cron task), make sure you `cd` into the
+target download folder before running the command. A typical TrueNAS cron
+command looks like this:
+
+```bash
+cd /path/to/srrs-download && docker compose up --build --remove-orphans
+```
 
 ## Files created
 
