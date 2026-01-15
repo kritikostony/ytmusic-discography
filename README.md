@@ -2,9 +2,8 @@
 
 This project runs `yt-dlp` in a container to download videos from a YouTube
 playlist (the "Reddit Stories" playlist) into the directory where you run the
-Compose file. It keeps small state files in the download directory (or `STATE_DIR`
-when set) to remember what has already been downloaded so future runs only fetch new
-videos.
+Compose file. It keeps small state files in the same directory as the script to
+remember what has already been downloaded so future runs only fetch new videos.
 
 ## How it works
 
@@ -14,12 +13,8 @@ videos.
   - thumbnails + metadata embedded into the video files.
 - `docker-compose.yaml` mounts the current directory to `/downloads` in the
   container, so downloads land next to the compose file.
-  - If you run `download_playlist.sh` directly on the host, it defaults to
-    downloading into the directory containing the script unless
-    `DOWNLOAD_DIR` is set. When running in the container, it prefers
-    `/downloads` if that path exists and is writable.
-  - If `STATE_DIR` is set, the counter and download archive live there instead
-    of the download directory (handy for keeping state files separate).
+  - `download_playlist.sh` always downloads into the directory containing the
+    script, and the counter/download archive live alongside it.
 
 ## Usage
 
