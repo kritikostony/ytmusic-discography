@@ -11,7 +11,7 @@ remember what has already been downloaded so future runs only fetch new videos.
   - a download archive (`downloaded.txt`) to skip previously downloaded videos,
   - a counter (`counter.txt`) to keep numbering consistent between runs,
   - thumbnails + metadata embedded into the video files,
-  - a YouTube Android client profile and extra fragment retries to reduce 403 fragment errors,
+  - a YouTube web client profile and extra fragment retries to reduce 403 fragment errors,
   - optional YouTube cookies or PO Token support via environment variables.
 - `docker-compose.yaml` mounts the current directory to `/downloads` in the
   container, so downloads land next to the compose file.
@@ -43,7 +43,7 @@ setting environment variables for the container:
 | --- | --- | --- |
 | `YTDLP_COOKIES_FILE` | Path to an exported cookies.txt file. Defaults to `/downloads/cookies.txt`. | `/downloads/cookies.txt` |
 | `YTDLP_PO_TOKEN` | GVS PO Token value for the selected player client. | `abc123` |
-| `YTDLP_PLAYER_CLIENT` | Override the player client (defaults to `android`). | `web` |
+| `YTDLP_PLAYER_CLIENT` | Override the player client (defaults to `web`). | `android` |
 
 Example (local file mounted in the download folder):
 
