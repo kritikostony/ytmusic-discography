@@ -19,8 +19,23 @@ if [ -f "$ARCHIVE_FILE" ]; then
   BEFORE_COUNT=$(wc -l < "$ARCHIVE_FILE")
 fi
 
+PLAYER_CLIENT="${YTDLP_PLAYER_CLIENT:-android}"
+COOKIES_FILE="${YTDLP_COOKIES_FILE:-$DOWNLOAD_DIR/cookies.txt}"
+EXTRACTOR_ARGS="youtube:player_client=${PLAYER_CLIENT}"
+if [ -n "${YTDLP_PO_TOKEN:-}" ]; then
+  EXTRACTOR_ARGS="${EXTRACTOR_ARGS};po_token=${PLAYER_CLIENT}.gvs+${YTDLP_PO_TOKEN}"
+fi
+
+YTDLP_ARGS=(
+  --extractor-args "$EXTRACTOR_ARGS"
+)
+
+if [ -f "$COOKIES_FILE" ]; then
+  YTDLP_ARGS+=(--cookies "$COOKIES_FILE")
+fi
+
 yt-dlp \
-  --extractor-args "youtube:player_client=android" \
+  "${YTDLP_ARGS[@]}" \
   --fragment-retries 20 \
   --retry-sleep fragment:1 \
   --playlist-reverse \
