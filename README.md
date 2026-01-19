@@ -10,7 +10,8 @@ remember what has already been downloaded so future runs only fetch new videos.
 - `download_playlist.sh` calls `yt-dlp` with:
   - a download archive (`downloaded.txt`) to skip previously downloaded videos,
   - a counter (`counter.txt`) to keep numbering consistent between runs,
-  - thumbnails + metadata embedded into the video files.
+  - thumbnails + metadata embedded into the video files,
+  - a YouTube Android client profile and extra fragment retries to reduce 403 fragment errors.
 - `docker-compose.yaml` mounts the current directory to `/downloads` in the
   container, so downloads land next to the compose file.
   - `download_playlist.sh` always downloads into the directory containing the
