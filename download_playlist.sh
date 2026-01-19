@@ -20,6 +20,9 @@ if [ -f "$ARCHIVE_FILE" ]; then
 fi
 
 yt-dlp \
+  --extractor-args "youtube:player_client=android" \
+  --fragment-retries 20 \
+  --retry-sleep fragment:1 \
   --playlist-reverse \
   --autonumber-start "$START_NUM" \
   -f "bv*+ba/b" \
