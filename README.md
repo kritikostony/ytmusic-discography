@@ -12,7 +12,8 @@ remember what has already been downloaded so future runs only fetch new videos.
   - a counter (`counter.txt`) to keep numbering consistent between runs,
   - thumbnails + metadata embedded into the video files,
   - a YouTube web client profile and extra fragment retries to reduce 403 fragment errors,
-  - optional YouTube cookies or PO Token support via environment variables.
+  - optional YouTube cookies or PO Token support via environment variables (cookies are
+    only loaded when the file is non-empty).
 - `docker-compose.yaml` mounts the current directory to `/downloads` in the
   container, so downloads land next to the compose file.
   - `download_playlist.sh` always downloads into the directory containing the
@@ -41,7 +42,7 @@ setting environment variables for the container:
 
 | Variable | Purpose | Example |
 | --- | --- | --- |
-| `YTDLP_COOKIES_FILE` | Path to an exported cookies.txt file. Defaults to `/downloads/cookies.txt`. | `/downloads/cookies.txt` |
+| `YTDLP_COOKIES_FILE` | Path to an exported cookies.txt file (must be non-empty). Defaults to `/downloads/cookies.txt`. | `/downloads/cookies.txt` |
 | `YTDLP_PO_TOKEN` | GVS PO Token value for the selected player client. | `abc123` |
 | `YTDLP_PLAYER_CLIENT` | Override the player client (defaults to `android,web`). | `android` |
 
@@ -51,6 +52,12 @@ Example (local file mounted in the download folder):
 YTDLP_PO_TOKEN=your-token \
 docker compose up --build --remove-orphans
 ```
+
+If you see warnings about the Android client being skipped due to cookies, double
+check that `cookies.txt` actually contains exported cookies and is not a zero-byte
+file. Remove or populate the file to allow the Android client to run. If the
+web client reports SABR streaming or missing formats, try `YTDLP_PLAYER_CLIENT=android`
+first, since it avoids the web-only SABR challenge in many cases.
 
 ## Files created
 

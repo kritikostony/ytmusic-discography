@@ -30,7 +30,7 @@ YTDLP_ARGS=(
   --extractor-args "$EXTRACTOR_ARGS"
 )
 
-if [ -f "$COOKIES_FILE" ]; then
+if [ -s "$COOKIES_FILE" ]; then
   YTDLP_ARGS+=(--cookies "$COOKIES_FILE")
 fi
 
