@@ -19,7 +19,7 @@ if [ -f "$ARCHIVE_FILE" ]; then
   BEFORE_COUNT=$(wc -l < "$ARCHIVE_FILE")
 fi
 
-PLAYER_CLIENT="${YTDLP_PLAYER_CLIENT:-web}"
+PLAYER_CLIENT="${YTDLP_PLAYER_CLIENT:-android,web}"
 COOKIES_FILE="${YTDLP_COOKIES_FILE:-$DOWNLOAD_DIR/cookies.txt}"
 EXTRACTOR_ARGS="youtube:player_client=${PLAYER_CLIENT}"
 if [ -n "${YTDLP_PO_TOKEN:-}" ]; then

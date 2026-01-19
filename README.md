@@ -43,7 +43,7 @@ setting environment variables for the container:
 | --- | --- | --- |
 | `YTDLP_COOKIES_FILE` | Path to an exported cookies.txt file. Defaults to `/downloads/cookies.txt`. | `/downloads/cookies.txt` |
 | `YTDLP_PO_TOKEN` | GVS PO Token value for the selected player client. | `abc123` |
-| `YTDLP_PLAYER_CLIENT` | Override the player client (defaults to `web`). | `android` |
+| `YTDLP_PLAYER_CLIENT` | Override the player client (defaults to `android,web`). | `android` |
 
 Example (local file mounted in the download folder):
 
