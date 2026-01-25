@@ -12,7 +12,7 @@ COUNTER_FILE="$DOWNLOAD_DIR/counter.txt"
 ARCHIVE_FILE="$DOWNLOAD_DIR/downloaded.txt"
 
 COOKIES_FILE="${YTDLP_COOKIES_FILE:-/downloads/cookies.txt}"
-PLAYER_CLIENT="${YTDLP_PLAYER_CLIENT:-web}"
+PLAYER_CLIENT="${YTDLP_PLAYER_CLIENT:-android,web}"
 PO_TOKEN="${YTDLP_PO_TOKEN:-}"
 
 # clean leftovers

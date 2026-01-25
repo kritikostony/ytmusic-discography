@@ -11,7 +11,7 @@ remember what has already been downloaded so future runs only fetch new videos.
   - a download archive (`downloaded.txt`) to skip previously downloaded videos,
   - a counter (`counter.txt`) to keep numbering consistent between runs,
   - thumbnails + metadata embedded into the video files,
-  - a YouTube web client profile and extra fragment retries to reduce 403 fragment errors,
+  - a YouTube player client list (defaults to `android,web`) and extra fragment retries to reduce 403 fragment errors,
   - optional YouTube cookies or PO Token support via environment variables (cookies are
     only loaded when the file is non-empty).
 - `docker-compose.yaml` mounts the current directory to `/downloads` in the
@@ -44,7 +44,7 @@ setting environment variables for the container:
 | --- | --- | --- |
 | `YTDLP_COOKIES_FILE` | Path to an exported cookies.txt file (must be non-empty). Defaults to `/downloads/cookies.txt`. | `/downloads/cookies.txt` |
 | `YTDLP_PO_TOKEN` | GVS PO Token value for the selected player client. | `abc123` |
-| `YTDLP_PLAYER_CLIENT` | Override the player client (defaults to `web`). | `web` |
+| `YTDLP_PLAYER_CLIENT` | Override the player client (defaults to `android,web`). | `web` |
 
 Example (local file mounted in the download folder):
 
@@ -56,9 +56,10 @@ docker compose up --build --remove-orphans
 To use a cookies file, place it at `./cookies.txt` next to the Compose file (or
 set `YTDLP_COOKIES_FILE` to a different path inside the container).
 
-If the web client reports SABR streaming or missing formats, try providing a
-valid cookies file or a PO Token for the web client so yt-dlp can access the
-needed formats.
+If the web client reports SABR streaming or missing formats, the default
+`android,web` client list should fall back to Android formats. If you still see
+missing formats, try providing a valid cookies file or a PO Token for the web
+client so yt-dlp can access the needed formats.
 
 ### Refreshing cookies when YouTube blocks downloads
 
