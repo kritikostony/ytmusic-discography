@@ -62,6 +62,15 @@ file. Remove or populate the file to allow the Android client to run. If the
 web client reports SABR streaming or missing formats, try `YTDLP_PLAYER_CLIENT=android`
 first, since it avoids the web-only SABR challenge in many cases.
 
+### Refreshing cookies when YouTube blocks downloads
+
+If you see messages like "Sign in to confirm you’re not a bot" or warnings that
+cookies are no longer valid, you need to refresh the cookies file. Export a new
+`cookies.txt` from a logged-in browser session (see the yt-dlp wiki link in the
+error message), then replace the file next to the Compose file. If the file is
+stale or empty, delete it before rerunning so yt-dlp does not load invalid
+cookies.
+
 ## Files created
 
 - `### - <title>.mkv` video files (with embedded metadata and thumbnails)
