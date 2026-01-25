@@ -11,7 +11,9 @@ DOWNLOAD_DIR="$SCRIPT_DIR"
 COUNTER_FILE="$DOWNLOAD_DIR/counter.txt"
 ARCHIVE_FILE="$DOWNLOAD_DIR/downloaded.txt"
 
-COOKIES_FILE="/path/to/youtube_cookies.txt"
+COOKIES_FILE="${YTDLP_COOKIES_FILE:-/downloads/cookies.txt}"
+PLAYER_CLIENT="${YTDLP_PLAYER_CLIENT:-android,web}"
+PO_TOKEN="${YTDLP_PO_TOKEN:-}"
 
 # clean leftovers
 find "$DOWNLOAD_DIR" -maxdepth 1 -name '*.part' -delete
@@ -26,9 +28,12 @@ if [ -f "$ARCHIVE_FILE" ]; then
 fi
 
 YTDLP_ARGS=(
-  --extractor-args "youtube:player_client=web"
-  --cookies /cookies/youtube_cookies.txt
+  --extractor-args "youtube:player_client=${PLAYER_CLIENT}"
 )
+
+if [ -n "$PO_TOKEN" ]; then
+  YTDLP_ARGS+=(--extractor-args "youtube:po_token=${PO_TOKEN}")
+fi
 
 if [ -s "$COOKIES_FILE" ]; then
   YTDLP_ARGS+=(--cookies "$COOKIES_FILE")

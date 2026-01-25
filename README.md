@@ -53,6 +53,9 @@ YTDLP_PO_TOKEN=your-token \
 docker compose up --build --remove-orphans
 ```
 
+To use a cookies file, place it at `./cookies.txt` next to the Compose file (or
+set `YTDLP_COOKIES_FILE` to a different path inside the container).
+
 If you see warnings about the Android client being skipped due to cookies, double
 check that `cookies.txt` actually contains exported cookies and is not a zero-byte
 file. Remove or populate the file to allow the Android client to run. If the
