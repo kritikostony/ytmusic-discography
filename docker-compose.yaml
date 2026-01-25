@@ -4,6 +4,7 @@ services:
     image: local-yt-dlp
     container_name: yt-dlp-reddit
     volumes:
+      - /path/to/youtube_cookies.txt:/cookies/youtube_cookies.txt:rw
       - .:/downloads
     environment:
       DOWNLOAD_DIR: /downloads

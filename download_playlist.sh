@@ -1,6 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
+# ensure yt-dlp is up to date (needed for --no-write-cookies)
+yt-dlp -U
+
 PLAYLIST_URL="https://www.youtube.com/playlist?list=PLOTbwrNJHj_JA2fTN9t_-20DH9q_ydf07"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOWNLOAD_DIR="$SCRIPT_DIR"
@@ -8,26 +11,23 @@ DOWNLOAD_DIR="$SCRIPT_DIR"
 COUNTER_FILE="$DOWNLOAD_DIR/counter.txt"
 ARCHIVE_FILE="$DOWNLOAD_DIR/downloaded.txt"
 
+COOKIES_FILE="/path/to/youtube_cookies.txt"
+
 # clean leftovers
 find "$DOWNLOAD_DIR" -maxdepth 1 -name '*.part' -delete
 
 # init counter
 [ -f "$COUNTER_FILE" ] || echo 1 > "$COUNTER_FILE"
 START_NUM=$(cat "$COUNTER_FILE")
+
 BEFORE_COUNT=0
 if [ -f "$ARCHIVE_FILE" ]; then
   BEFORE_COUNT=$(wc -l < "$ARCHIVE_FILE")
 fi
 
-PLAYER_CLIENT="${YTDLP_PLAYER_CLIENT:-android,web}"
-COOKIES_FILE="${YTDLP_COOKIES_FILE:-$DOWNLOAD_DIR/cookies.txt}"
-EXTRACTOR_ARGS="youtube:player_client=${PLAYER_CLIENT}"
-if [ -n "${YTDLP_PO_TOKEN:-}" ]; then
-  EXTRACTOR_ARGS="${EXTRACTOR_ARGS};po_token=${PLAYER_CLIENT}.gvs+${YTDLP_PO_TOKEN}"
-fi
-
 YTDLP_ARGS=(
-  --extractor-args "$EXTRACTOR_ARGS"
+  --extractor-args "youtube:player_client=web"
+  --cookies /cookies/youtube_cookies.txt
 )
 
 if [ -s "$COOKIES_FILE" ]; then
