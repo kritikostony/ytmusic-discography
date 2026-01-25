@@ -44,7 +44,7 @@ setting environment variables for the container:
 | --- | --- | --- |
 | `YTDLP_COOKIES_FILE` | Path to an exported cookies.txt file (must be non-empty). Defaults to `/downloads/cookies.txt`. | `/downloads/cookies.txt` |
 | `YTDLP_PO_TOKEN` | GVS PO Token value for the selected player client. | `abc123` |
-| `YTDLP_PLAYER_CLIENT` | Override the player client (defaults to `android,web`). | `android` |
+| `YTDLP_PLAYER_CLIENT` | Override the player client (defaults to `web`). | `web` |
 
 Example (local file mounted in the download folder):
 
@@ -56,11 +56,9 @@ docker compose up --build --remove-orphans
 To use a cookies file, place it at `./cookies.txt` next to the Compose file (or
 set `YTDLP_COOKIES_FILE` to a different path inside the container).
 
-If you see warnings about the Android client being skipped due to cookies, double
-check that `cookies.txt` actually contains exported cookies and is not a zero-byte
-file. Remove or populate the file to allow the Android client to run. If the
-web client reports SABR streaming or missing formats, try `YTDLP_PLAYER_CLIENT=android`
-first, since it avoids the web-only SABR challenge in many cases.
+If the web client reports SABR streaming or missing formats, try providing a
+valid cookies file or a PO Token for the web client so yt-dlp can access the
+needed formats.
 
 ### Refreshing cookies when YouTube blocks downloads
 
