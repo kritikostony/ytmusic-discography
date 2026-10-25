@@ -1,8 +1,27 @@
-# ignore everything
-*
+# Secrets — never commit
+cookies*.txt
+*.env
+.env*
 
-# but NOT these:
-!/Dockerfile
-!/download_playlist.sh
-!/docker-compose.yaml
-!/README.md
+# Runtime data
+output/
+downloads/
+*.part
+*.ytdl
+archive.txt
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Editors / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
