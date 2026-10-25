@@ -13,7 +13,9 @@ Private repo. Keep it free of deployment-specific details anyway (hosts, IPs, re
 
 ### Download
 - Tools: `ytmusicapi` (artist → albums/singles listing, release playlist IDs) and `yt-dlp` (download).
-- Audio only. Format preference: `141` (AAC 256 kbps, requires YouTube Premium cookies) → fallback `251` (Opus) → `bestaudio`.
+- Audio only. Format selector: `141/774/251` — `141` (AAC ~256 kbps, Premium) → `774` (Opus ~256 kbps, Premium) → `251` (Opus ~145 kbps). No `bestaudio` fallback: if none of these exist, skip the track and log it.
+- An album may mix `.m4a` and `.opus` when individual tracks lack `141`.
+- `ffmpeg` is required in the image: `141` arrives as DASH m4a and must be remuxed (no re-encode); also needed for tag and cover embedding.
 - **No re-encoding.** Remux only if the container requires it.
 - Embed metadata (artist, album artist, album, title, track number, total tracks, year) and cover art.
 - Use a yt-dlp download archive so re-runs skip completed tracks.
@@ -49,7 +51,7 @@ Sanitize names for filesystem safety; keep Unicode (Greek etc.) intact.
 - Python, single Docker image, slim base. Entry point runs the whole list; flags for a single artist and `--dry-run` (resolve + list releases, no download).
 
 ## To verify early (unknowns, do not assume)
-- Whether format `141` is actually served via yt-dlp with Premium cookies for YouTube Music release playlists today, and whether a PO token is required.
+- ~~Format `141` with Premium cookies; PO token~~ — **verified 2026-10-25** (yt-dlp 2026.10.21, deno 2.9.8, `yt-dlp[default]`): with cookies yt-dlp reports "Detected YouTube Premium subscription" and lists `141` and `774` (client `TV-S`); without cookies neither appears. One track downloaded as `141` with no PO token provider and no 403. A JS runtime (deno) is required. Re-check if downloads start failing at scale.
 - Whether channel IDs from the list (official artist channels and `- Topic` channels) are accepted by `ytmusicapi.get_artist()` or need mapping.
 - Which metadata fields yt-dlp populates for YouTube Music album playlists (`album`, `track_number`, `release_year`, `artist`), and what ytmusicapi must supply instead.
 - Lidarr API: exact payload for `DownloadedAlbumsScan` (path field, import mode) on the deployed Lidarr version.
