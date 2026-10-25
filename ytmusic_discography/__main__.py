@@ -10,7 +10,7 @@ from pathlib import Path
 
 from ytmusicapi import YTMusic
 
-from . import artists, resolve
+from . import artists, resolve, tracks
 
 log = logging.getLogger("ytmusic_discography")
 
@@ -50,6 +50,7 @@ def main(argv: list[str]) -> int:
 
     yt = YTMusic(language="en", location=args.location) if args.location else YTMusic(language="en")
     failed = 0
+    skipped: list[str] = []
     for entry in entries:
         log.info("ARTIST %s (line %d)", entry.name, entry.line_no)
         try:
@@ -62,16 +63,25 @@ def main(argv: list[str]) -> int:
             for section, rel in resolve.list_releases(yt, ra.page, pause):
                 album = yt.get_album(rel["browseId"])
                 pause()
-                tracks = album.get("tracks", [])
-                types = Counter(str(t.get("videoType")) for t in tracks)
-                unavailable = sum(1 for t in tracks if t.get("isAvailable") is False)
-                log.info("  %-7s %s | %s | type=%s | tracks=%d unavailable=%d | videoType=%s | playlist=%s",
+                planned = tracks.plan(yt, album, ra.name, pause)
+                counts = Counter(p.status for p in planned)
+                log.info("  %-7s %s | %s | type=%s | tracks=%d %s | playlist=%s",
                          section, album.get("year"), album.get("title"), album.get("type"),
-                         len(tracks), unavailable, dict(types), album.get("audioPlaylistId"))
+                         len(planned), dict(counts), album.get("audioPlaylistId"))
+                for p in planned:
+                    if p.status == "replaced":
+                        log.info("    %s. %s -> audio %s (was %s)", p.number, p.title, p.video_id, p.reason)
+                    elif p.status == "skipped":
+                        log.warning("    %s. %s SKIPPED: %s", p.number, p.title, p.reason)
+                        skipped.append(f"{entry.name} / {album.get('title')} / {p.number}. {p.title}: {p.reason}")
         except Exception:
             log.exception("  FAILED")
             failed += 1
-    log.info("done: %d artists, %d failed", len(entries), failed)
+    if skipped:
+        log.warning("skipped tracks (%d):", len(skipped))
+        for line in skipped:
+            log.warning("  %s", line)
+    log.info("done: %d artists, %d failed, %d tracks skipped", len(entries), failed, len(skipped))
     return 1 if failed else 0
 
 
