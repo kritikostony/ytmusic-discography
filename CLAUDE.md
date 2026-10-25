@@ -35,7 +35,7 @@ Sanitize names for filesystem safety; keep Unicode (Greek etc.) intact.
 ### Inputs
 | Input | How | Notes |
 |---|---|---|
-| Artist list | file mount, read-only | Lines: `Name — URL` (em dash separator). URL may be `(none)` → name search. Ignore blank lines and `#` comments. |
+| Artist list | file mount, read-only | Lines: `Name — URL [URL ...]` (em dash separator; one or more space-separated URLs). URL forms seen: `youtube.com/channel/UC…`, `music.youtube.com/channel/UC…`, `youtube.com/user/…`, `youtube.com/@…`. URL may be `(none)` → name search. Ignore blank lines and `#` comments. |
 | Destination | dir mount, read-write | Staging root (`<DEST>`) |
 | Cookies | file mount, **read-only** | Netscape cookies.txt from a logged-in YouTube Premium session |
 | `LIDARR_URL`, `LIDARR_API_KEY`, `LIDARR_STAGING_PATH` | env | Optional |
@@ -52,7 +52,9 @@ Sanitize names for filesystem safety; keep Unicode (Greek etc.) intact.
 
 ## To verify early (unknowns, do not assume)
 - ~~Format `141` with Premium cookies; PO token~~ — **verified 2026-10-25** (yt-dlp 2026.10.21, deno 2.9.8, `yt-dlp[default]`): with cookies yt-dlp reports "Detected YouTube Premium subscription" and lists `141` and `774` (client `TV-S`); without cookies neither appears. One track downloaded as `141` with no PO token provider and no 403. A JS runtime (deno) is required. Re-check if downloads start failing at scale.
-- Whether channel IDs from the list (official artist channels and `- Topic` channels) are accepted by `ytmusicapi.get_artist()` or need mapping.
+- ~~Channel IDs → `ytmusicapi.get_artist()`~~ — **verified 2026-10-25** (ytmusicapi 1.12.3, unauthenticated) on a 109-artist list: 76 `UC…` IDs resolved directly; 28 `UC…` IDs raised `KeyError` (not YouTube Music artist pages: VEVO/label/plain channels); 5 `/user/` or `@` URLs cannot be passed to `get_artist()`. Name search (`filter="artists"`) returned a plausible artist for all 33 fallbacks. Resolution order: each `UC…` ID in the line → name search. A direct hit can still be wrong (one returned "X feat. Y"), so log name + browseId for review.
+- **Metadata language (verified 2026-10-25):** for Greek artists, YouTube Music album and track metadata is Latin transliteration regardless of requested language. ytmusicapi rejects `language="el"`; forcing `hl=el` returns the Greek artist name but breaks artist-page parsing (no albums/singles). Use `language="en"`. Album `year` is the release's (often digital re-release) year, not the original.
+- Whether Lidarr matches Latin-tagged staging files to MusicBrainz releases with Greek titles, and how the re-release year affects matching. Test with one album before a full run.
 - Which metadata fields yt-dlp populates for YouTube Music album playlists (`album`, `track_number`, `release_year`, `artist`), and what ytmusicapi must supply instead.
 - Lidarr API: exact payload for `DownloadedAlbumsScan` (path field, import mode) on the deployed Lidarr version.
 
