@@ -1,1 +1,5 @@
+# Updating yt-dlp: change its version here, rebuild the image, run a --dry-run and a one-artist test.
+yt-dlp[default]==2026.10.21
+deno==2.9.8
 ytmusicapi==1.12.3
+mutagen==1.48.1

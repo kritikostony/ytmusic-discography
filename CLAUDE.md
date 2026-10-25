@@ -15,17 +15,18 @@ Private repo. Keep it free of deployment-specific details anyway (hosts, IPs, re
 - Tools: `ytmusicapi` (artist → albums/singles listing, release playlist IDs) and `yt-dlp` (download).
 - Audio only. Format selector: `141/774/251` — `141` (AAC ~256 kbps, Premium) → `774` (Opus ~256 kbps, Premium) → `251` (Opus ~145 kbps). No `bestaudio` fallback: if none of these exist, skip the track and log it.
 - An album may mix `.m4a` and `.opus` when individual tracks lack `141`.
-- `ffmpeg` is required in the image: `141` arrives as DASH m4a and must be remuxed (no re-encode); also needed for tag and cover embedding.
+- `ffmpeg` (Debian package) is required in the image: `141` arrives as DASH m4a and is fixed up by yt-dlp; `774`/`251` webm is remuxed to `.opus` (Ogg). Tags and cover art are written with `mutagen`. No re-encoding anywhere.
 - **No re-encoding.** Remux only if the container requires it.
 - Embed metadata (artist, album artist, album, title, track number, total tracks, year) and cover art.
-- Use a yt-dlp download archive so re-runs skip completed tracks.
+- Download archive `<DEST>/.archive.txt` (own format, one `<release browseId> <videoId>` per line) so re-runs skip completed tracks. Not yt-dlp's archive: that is keyed by video ID only and would skip a song on a single after it was fetched for an album. Back it up (e.g. ZFS snapshots): losing it means re-downloading everything.
+- Cookies are required for downloading (Premium formats). yt-dlp writes cookies back, so it gets a private temporary copy (`/tmp`, mode 600) deleted at exit; the mounted file is never modified.
 - Pace requests (sleep between tracks and between releases, configurable) to reduce the risk of the account being flagged.
 
 ### Output layout (staging)
 ```
 <DEST>/<Artist>/<Album> (<Year>)/<NN> - <Title>.<ext>
 ```
-Sanitize names for filesystem safety; keep Unicode (Greek etc.) intact.
+`<Artist>` and the album-artist tag use the name from the input list (Greek); album and track titles and track artists come from YouTube Music (Latin). Sanitize names for filesystem safety; keep Unicode (Greek etc.) intact. If two releases of one artist map to the same folder name in a run, append ` [<type>]`. Partial downloads go to `<DEST>/.tmp/` and are moved into place after tagging.
 
 ### Lidarr hand-off (optional)
 - If `LIDARR_URL` and `LIDARR_API_KEY` are set, after each artist completes, trigger Lidarr's `DownloadedAlbumsScan` command for that artist's staging folder, using the path **as Lidarr sees it** (`LIDARR_STAGING_PATH`, which may differ from the container's `<DEST>`).
@@ -44,11 +45,12 @@ Sanitize names for filesystem safety; keep Unicode (Greek etc.) intact.
 ### Security
 - Cookies grant full Google account access: never log them, never copy them into the image, image layers or output dir; mount read-only.
 - Never log the Lidarr API key.
-- Run as a non-root user in the container; output file ownership configurable via `PUID`/`PGID`.
+- Run as a non-root user in the container; output file ownership is set with `docker run --user <uid>:<gid>` (image default 10001:10001).
 - Pin dependency versions; `yt-dlp` updates often and breaks on YouTube changes, so make updating it a single, documented step.
 
 ### Packaging
-- Python, single Docker image, slim base. Entry point runs the whole list; flags for a single artist and `--dry-run` (resolve + list releases, no download).
+- Python, single Docker image, slim base. Entry point runs the whole list; flags `--artist`, `--release` and `--dry-run` (resolve + list releases, no download, no cookies needed).
+- Exit codes: 0 ok, 1 some artists failed, 2 usage/config error, 3 stopped because YouTube bot-checked or rate-limited (HTTP 429).
 
 ## To verify early (unknowns, do not assume)
 - ~~Format `141` with Premium cookies; PO token~~ — **verified 2026-10-25** (yt-dlp 2026.10.21, deno 2.9.8, `yt-dlp[default]`): with cookies yt-dlp reports "Detected YouTube Premium subscription" and lists `141` and `774` (client `TV-S`); without cookies neither appears. One track downloaded as `141` with no PO token provider and no 403. A JS runtime (deno) is required. Re-check if downloads start failing at scale.
