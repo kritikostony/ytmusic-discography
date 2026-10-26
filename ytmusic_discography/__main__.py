@@ -28,7 +28,10 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     p = argparse.ArgumentParser(prog="ytmusic-discography")
     p.add_argument("--artists-file", type=Path, default=Path(env("ARTISTS_FILE", "/input/artists.txt")))
     p.add_argument("--cookies", type=Path, default=Path(env("COOKIES_FILE", "/input/cookies.txt")))
-    p.add_argument("--dest", type=Path, default=Path(env("DEST", "/output")))
+    p.add_argument("--dest", type=Path, default=Path(env("DEST", "/output")),
+                   help="library root; files go to <dest>/<Artist>/<Album> (<Year>)/")
+    p.add_argument("--archive", type=Path, default=Path(env("ARCHIVE_FILE")) if env("ARCHIVE_FILE") else None,
+                   help="download archive file (default: <dest>/.archive.txt)")
     p.add_argument("--artist", help="only process this artist (exact name from the list)")
     p.add_argument("--release", help="only process releases with this exact title (use with --artist)")
     p.add_argument("--dry-run", action="store_true",
@@ -76,10 +79,11 @@ def main(argv: list[str]) -> int:
             return EXIT_USAGE
         # Imported lazily so --dry-run works without yt-dlp/ffmpeg installed.
         from . import download
-        tmp_dir = args.dest / ".tmp"
+        # Same mount as the library so finished files are renamed into place, not copied.
+        tmp_dir = args.dest / ".ytmusic-discography-tmp"
         shutil.rmtree(tmp_dir, ignore_errors=True)  # leftovers from an interrupted run
         tmp_dir.mkdir()
-        archive = Archive(args.dest / ".archive.txt")
+        archive = Archive(args.archive or args.dest / ".archive.txt")
         downloader = download.Downloader(args.cookies, tmp_dir)
         downloader.__enter__()
         log.info("lidarr hand-off: %s", "on" if use_lidarr else "off")
@@ -176,6 +180,7 @@ def main(argv: list[str]) -> int:
     finally:
         if downloader:
             downloader.__exit__(None, None, None)
+            shutil.rmtree(tmp_dir, ignore_errors=True)
 
     if skipped:
         log.warning("skipped tracks (%d):", len(skipped))
