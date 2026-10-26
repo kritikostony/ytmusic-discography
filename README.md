@@ -1,5 +1,7 @@
 # ytmusic-discography
 
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-support-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/antoniskritikos)
+
 Downloads artists' full discographies (albums, EPs and singles) from YouTube Music as tagged audio files, without music videos or Shorts. Writes into a music library as `<Artist>/<Album> (<Year>)/<NN> - <Title>.<ext>`.
 
 > **Disclaimer:** downloading from YouTube violates YouTube's Terms of Service. You are responsible for whether your use is lawful where you live. AAC 256 kbps requires a YouTube Premium account and its session cookies; using them ties all download requests to that Google account, which Google may restrict.
@@ -13,11 +15,18 @@ Downloads artists' full discographies (albums, EPs and singles) from YouTube Mus
 6. Records each finished track in an archive file, so re-runs only fetch new releases.
 7. Optional: asks Lidarr to import each artist folder (`LIDARR_URL`, `LIDARR_API_KEY`, `LIDARR_STAGING_PATH`). Lidarr only imports releases that exist in MusicBrainz.
 
-## Build
+## Get the image
+Prebuilt (linux/amd64, [Docker Hub](https://hub.docker.com/r/kritikostony/ytmusic-discography)):
 ```bash
-docker build -t ytmusic-discography:dev .
+docker pull kritikostony/ytmusic-discography:latest
 ```
-Dependencies are pinned in `requirements.txt`. **Updating yt-dlp** (needed when YouTube changes break downloads): change its version there, rebuild, run a `--dry-run` and a one-release test.
+Or build it yourself:
+```bash
+docker build -t kritikostony/ytmusic-discography:latest .
+```
+Dependencies are pinned in `requirements.txt`. **Updating yt-dlp** (needed when YouTube changes break downloads): change its version there, rebuild, run a `--dry-run` and a one-release test, then release.
+
+**Releasing:** push a tag `vX.Y.Z`; GitHub Actions runs the tests and publishes `kritikostony/ytmusic-discography:X.Y.Z`, `:X.Y` and `:latest`.
 
 ## Run
 ```bash
@@ -27,7 +36,7 @@ docker run --rm --user <uid>:<gid> -e YTM_LOCATION=<country code> \
   --mount type=bind,src=/path/to/cookies.txt,dst=/input/cookies.txt,readonly \
   --mount type=bind,src=/path/to/archive.txt,dst=/state/archive.txt \
   --mount type=bind,src=/path/to/music,dst=/output \
-  ytmusic-discography:dev [--artist "Name"] [--release "Title"] [--dry-run]
+  kritikostony/ytmusic-discography:latest [--artist "Name"] [--release "Title"] [--dry-run]
 ```
 - `--dry-run`: resolve artists and list releases only; needs no cookies or output mount.
 - The archive file must exist before the first run (`touch` it) and be writable by `<uid>`.
@@ -46,3 +55,6 @@ GPL-3.0-or-later; see [LICENSE](LICENSE).
 - [FFmpeg](https://ffmpeg.org/) (Debian package, LGPL/GPL)
 
 Network access: YouTube / YouTube Music, cover images from Google's image CDN, and your Lidarr instance if configured. No telemetry.
+
+## Support
+If this is useful to you, you can support it on [Ko-fi](https://ko-fi.com/antoniskritikos).

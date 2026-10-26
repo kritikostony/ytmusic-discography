@@ -68,6 +68,10 @@ The previous project (a yt-dlp video playlist downloader) is preserved at tag `s
 - `--fragment-retries 20 --retry-sleep fragment:1` reduced fragment 403s.
 Do not carry over: cookies mounted read-write, unpinned `yt-dlp` (`-U`, `latest` download at build), running as root.
 
+## Releases
+- Image: `kritikostony/ytmusic-discography` on Docker Hub, published by `.github/workflows/docker-publish.yml` on tags `vX.Y.Z` (tests must pass first). Secret: `DOCKERHUB_TOKEN`.
+- Keep the owner's Ko-fi link (https://ko-fi.com/antoniskritikos) in the README and `.github/FUNDING.yml`.
+
 ## Working agreements
 - Optimization order: Security → Stability → Simplicity → Performance.
 - FOSS only; disclose any telemetry, network calls or account requirements.
