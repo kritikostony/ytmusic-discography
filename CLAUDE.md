@@ -2,7 +2,7 @@
 
 Download full artist discographies (albums + singles) from YouTube Music as tagged audio files, optionally handing them to Lidarr for import. Runs as a Docker container.
 
-Private repo. Keep it free of deployment-specific details anyway (hosts, IPs, real paths, API keys): the owner's actual run configuration lives in a separate private infra repo. Use generic defaults and documented env vars.
+Public repo, licensed GPL-3.0-or-later. Keep it free of deployment-specific details (hosts, IPs, real paths, API keys, personal data): the owner's actual run configuration lives in a separate private infra repo. Use generic defaults and documented env vars.
 
 ## Requirements (decided)
 

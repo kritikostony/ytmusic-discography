@@ -36,6 +36,9 @@ docker run --rm --user <uid>:<gid> -e YTM_LOCATION=<country code> \
 
 Exit codes: 0 ok, 1 some artists failed, 2 config error, 3 YouTube bot-check/HTTP 429, 4 cookies rejected.
 
+## License
+GPL-3.0-or-later; see [LICENSE](LICENSE).
+
 ## Third-party software
 - [yt-dlp](https://github.com/yt-dlp/yt-dlp) (Unlicense), with [deno](https://github.com/denoland/deno) (MIT) as its JavaScript runtime
 - [ytmusicapi](https://github.com/sigma67/ytmusicapi) (MIT)
