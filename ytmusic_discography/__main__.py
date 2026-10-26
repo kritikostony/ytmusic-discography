@@ -20,6 +20,7 @@ log = logging.getLogger("ytmusic_discography")
 EXIT_FAILURES = 1
 EXIT_USAGE = 2
 EXIT_BLOCKED = 3
+EXIT_COOKIES = 4
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
@@ -159,7 +160,7 @@ def main(argv: list[str]) -> int:
                     cmd_id = lidarr.scan(lidarr_url, lidarr_key, target)
                     log.info("  lidarr: DownloadedAlbumsScan %s queued (command %d)", target, cmd_id)
             except Exception as e:
-                if downloader and isinstance(e, download.Blocked):
+                if downloader and isinstance(e, (download.Blocked, download.CookiesInvalid)):
                     raise
                 log.exception("  FAILED")
                 errors.append(entry.name)
@@ -168,6 +169,9 @@ def main(argv: list[str]) -> int:
         if downloader and isinstance(e, download.Blocked):
             log.error("STOPPED: YouTube is blocking or rate-limiting this account: %s", e)
             return EXIT_BLOCKED
+        if downloader and isinstance(e, download.CookiesInvalid):
+            log.error("STOPPED: YouTube rejected the cookies; export new ones (private window, then close it)")
+            return EXIT_COOKIES
         raise
     finally:
         if downloader:

@@ -20,6 +20,10 @@ class Blocked(Exception):
     """YouTube is rate-limiting or bot-checking this account; stop the whole run."""
 
 
+class CookiesInvalid(Exception):
+    """YouTube rejected the cookies; continuing would silently drop to non-Premium formats."""
+
+
 class FormatUnavailable(Exception):
     pass
 
@@ -32,6 +36,9 @@ class _Logger:
         pass
 
     def warning(self, msg: str) -> None:
+        if "cookies are no longer valid" in msg:
+            # Raised from inside yt-dlp before the download starts, so nothing is fetched.
+            raise CookiesInvalid(msg)
         log.warning("yt-dlp: %s", msg)
 
     def error(self, msg: str) -> None:

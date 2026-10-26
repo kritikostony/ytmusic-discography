@@ -45,3 +45,12 @@ def test_lidarr_request():
     assert r.get_method() == "POST"
     assert r.headers["X-api-key"] == "secret"
     assert json.loads(r.data) == {"name": "DownloadedAlbumsScan", "path": "/mess/ytmusic/Άννα Βίσση", "importMode": "move"}
+
+
+def test_invalid_cookies_warning_raises():
+    import pytest
+
+    from ytmusic_discography.download import CookiesInvalid, _Logger
+    with pytest.raises(CookiesInvalid):
+        _Logger().warning("[youtube] The provided YouTube account cookies are no longer valid. They have likely been rotated")
+    _Logger().warning("some other warning")  # does not raise

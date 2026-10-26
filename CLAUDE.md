@@ -50,7 +50,7 @@ Private repo. Keep it free of deployment-specific details anyway (hosts, IPs, re
 
 ### Packaging
 - Python, single Docker image, slim base. Entry point runs the whole list; flags `--artist`, `--release` and `--dry-run` (resolve + list releases, no download, no cookies needed).
-- Exit codes: 0 ok, 1 some artists failed, 2 usage/config error, 3 stopped because YouTube bot-checked or rate-limited (HTTP 429).
+- Exit codes: 0 ok, 1 some artists failed, 2 usage/config error, 3 stopped because YouTube bot-checked or rate-limited (HTTP 429), 4 stopped because YouTube rejected the cookies (yt-dlp "cookies are no longer valid"; never continue without Premium).
 
 ## To verify early (unknowns, do not assume)
 - ~~Format `141` with Premium cookies; PO token~~ — **verified 2026-10-25** (yt-dlp 2026.10.21, deno 2.9.8, `yt-dlp[default]`): with cookies yt-dlp reports "Detected YouTube Premium subscription" and lists `141` and `774` (client `TV-S`); without cookies neither appears. One track downloaded as `141` with no PO token provider and no 403. A JS runtime (deno) is required. Re-check if downloads start failing at scale.
